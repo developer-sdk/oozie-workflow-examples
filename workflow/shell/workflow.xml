@@ -1,0 +1,25 @@
+<workflow-app xmlns='uri:oozie:workflow:1.0' name='shell-wf'>
+    <start to='shell1' />
+    <action name='shell1'>
+        <shell xmlns="uri:oozie:shell-action:1.0">
+            <resource-manager>hadoop-host:8050</resource-manager>
+            <name-node>hdfs://hadoop-host</name-node>
+            <configuration>
+                <property>
+                  <name>mapred.job.queue.name</name>
+                  <value>default</value>
+                </property>
+            </configuration>
+            <exec>echo.sh</exec>
+            <argument>A</argument>
+            <argument>B</argument>
+            <file>echo.sh#echo.sh</file>
+        </shell>
+        <ok to="end" />
+        <error to="fail" />
+    </action>
+    <kill name="fail">
+        <message>Script failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end' />
+</workflow-app>
