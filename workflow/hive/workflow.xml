@@ -1,0 +1,31 @@
+<workflow-app xmlns="uri:oozie:workflow:1.0" name="workflow_sample_job">
+    <start to="hive_action" />
+ 
+    <action name="hive_action">
+        <hive xmlns="uri:oozie:hive-action:1.0">
+            <resource-manager>hadoop-host:8050</resource-manager>
+            <name-node>hdfs://hadoo-host</name-node>
+            <job-xml>hive-site.xml</job-xml>
+            <configuration>
+                <property>
+                    <name>hive.tez.container.size</name>
+                    <value>2048</value>
+                </property>
+                <property>
+                    <name>hive.tez.java.opts</name>
+                    <value>-Xmx1600m</value>
+                </property>
+            </configuration>
+            <script>sample.hql</script>
+        </hive>
+        <ok to="end" />
+        <error to="kill" />
+    </action>
+ 
+    <kill name="kill">
+        <message>Error!!</message>
+    </kill>
+ 
+    <end name="end" />
+ 
+</workflow-app>
