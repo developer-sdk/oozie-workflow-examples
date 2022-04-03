@@ -1,0 +1,25 @@
+<workflow-app xmlns="uri:oozie:workflow:1.0" name="workflow_sample_job">
+    <start to="spark_action" />
+
+    <action name="spark_action">
+        <spark xmlns="uri:oozie:spark-action:1.0">
+            <resource-manager>hadoop-host:8050</resource-manager>
+            <name-node>hdfs://hadoop-host</name-node>
+            <master>yarn-client</master>
+            <name>Spark Example</name>
+            <class>org.apache.spark.examples.SparkPi</class>
+            <jar>/opt/spark/examples/jars/spark-examples_2.11-2.4.6.jar</jar>
+            <spark-opts>--executor-memory 2G --conf spark.hadoop.yarn.resourcemanager.address=hadoop-host:8050 --conf spark.yarn.stagingDir=hdfs://hadoop-host/user/ubuntu --conf spark.yarn.appMasterEnv.HADOOP_CONF_DIR=/etc/hadoop/conf --conf spark.io.compression.codec=snappy</spark-opts>
+            <arg>100</arg>
+        </spark>
+        <ok to="end" />
+        <error to="kill" />
+    </action>
+
+    <kill name="kill">
+        <message>Error!!</message>
+    </kill>
+
+    <end name="end" />
+
+</workflow-app>
